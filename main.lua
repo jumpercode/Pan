@@ -13,11 +13,20 @@ local pos = "up"
 
 local mapa = display.newImageRect("res/img/map.png", 1536, 1024)
 mapa.x = display.contentCenterX + dx
-mapa.y = -32+dy
+mapa.y = -32
+
+local globo = display.newImageRect("res/img/balloon.png", 32, 32)
+globo.x = 100
+globo.y = 100
+globo.du = 1
+globo.dv = 1
+globo.last = 0
 
 local avion = display.newImageRect("res/img/stuka.png", 80, 48)
 avion.x = display.contentCenterX
 avion.y = display.contentCenterY
+avion.du = 0
+avion.dv = 0
 
 local function onKeyEvent( event )
     if(akeys[event.keyName]) then
@@ -28,6 +37,8 @@ end
 Runtime:addEventListener( "key", onKeyEvent )
 
 local function gameLoop()
+
+    local time = system.getTimer()
 
     if(keys.up) then
         if(pos ~= "up") then
@@ -71,21 +82,37 @@ local function gameLoop()
         if((mapa.y+dy) <= 512 and (mapa.y+dy) >= -32) then
             mapa.y = mapa.y + dy
         else
-            avion.y = avion.y - dy
+            avion.dv = -1*dy
+            dy = 0
         end
     else
-        avion.y = avion.y - dy
+        avion.dv = -1*dy
+        dy = 0
     end
 
     if(avion.x == display.contentCenterX) then
         if((mapa.x+dx) <= 768 and (mapa.x+dx) >= -128) then
             mapa.x = mapa.x + dx
         else
-            avion.x = avion.x - dx
+            avion.du = -1*dx
+            dx = 0
         end
     else
-        avion.x = avion.x - dx
+        avion.du = -1*dx
+        dx = 0
     end
+
+    if((time - globo.last) > 3000) then
+        globo.du = math.random(-3, 3)
+        globo.dv = math.random(-3, 2)
+        globo.last = time
+    end
+
+    avion.x = avion.x + avion.du
+    avion.y = avion.y + avion.dv
+
+    globo.x = (globo.x+globo.du)+dx
+    globo.y = (globo.y+globo.dv)+dy
 
 end
 

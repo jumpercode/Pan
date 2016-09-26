@@ -6,5 +6,6 @@ Corona SDK - Sample Project
 * Object Rotation
 * Move the map
 * Limited Axes
+* Local Variation vs Global Variation [(du, dv) vs (dx, dy)]
 
 Written In Lua
